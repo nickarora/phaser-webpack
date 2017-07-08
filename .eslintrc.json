@@ -1,20 +1,29 @@
 {
   "parser": "babel-eslint",
-  "extends": "standard",
+  "extends": "eslint:recommended",
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   },
   "env": {
     "browser": true
   },
   "rules": {
-    "import/no-unresolved": [2]
+    "strict": "error",
+    "prefer-const": "error",
+    "no-unused-vars": [ "error", { "argsIgnorePattern": "^_" } ],
+    "no-var": "error",
+    "no-console": ["warn"],
+    "import/no-unresolved": ["error"]
   },
   "globals": {
     "phaser": true
   },
   "settings": {
     "import/core-modules": [ "phaser", "pixi", "p2" ]
-  }
+  },
+  "plugins": [ "import" ]
 }
