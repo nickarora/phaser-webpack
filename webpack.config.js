@@ -43,7 +43,15 @@ module.exports = {
       { test: /pixi\.js/, use: ['expose-loader?PIXI'] },
       { test: /phaser-split\.js$/, use: ['expose-loader?Phaser'] },
       { test: /p2\.js/, use: ['expose-loader?p2'] },
-      { test: /\.html$/, use: ['html-loader'] }
+      { test: /\.html$/, use: ['html-loader'] },
+      { test: /\.(jpg|png|svg)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[path][hash].[ext]',
+          },
+        }
+      },
     ]
   },
   resolve: {
