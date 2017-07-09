@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const merge = require('webpack-merge')
 
 const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
@@ -8,10 +9,15 @@ const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 const PATHS = {
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'dist'),
+  styles: path.join(__dirname, 'assets/styles'),
   phaser: path.join(phaserModule, 'build/custom/phaser-split.js'),
   pixi: path.join(phaserModule, 'build/custom/pixi.js'),
   p2: path.join(phaserModule, 'build/custom/p2.js')
 }
+
+const extractTextPlugin = new ExtractTextPlugin({
+  filename: './styles/[hash].css',
+})
 
 const commonConfig = {
   entry: {
@@ -41,7 +47,7 @@ const commonConfig = {
         use: {
           loader: 'file-loader',
           options: {
-            name: '[path][hash].[ext]',
+            name: './images/[hash].[ext]',
           },
         }
       },
@@ -64,6 +70,15 @@ const devConfig = {
     port: process.env.PORT, // Defaults to 8080
   },
   devtool: 'cheap-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        include: PATHS.styles,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+    ],
+  },
   plugins: [
     new webpack.DefinePlugin({
       __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true'))
@@ -75,6 +90,18 @@ const prodConfig = {
   output: {
     path: PATHS.dist,
     filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        include: PATHS.styles,
+        use: extractTextPlugin.extract({
+          use: ['css-loader', 'sass-loader'],
+          fallback: 'style-loader',
+        }),
+      },
+    ],
   },
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -88,6 +115,7 @@ const prodConfig = {
     new webpack.DefinePlugin({
       __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'false'))
     }),
+    extractTextPlugin,
   ],
 }
 
