@@ -1,45 +1,38 @@
-var path = require('path')
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const merge = require('webpack-merge')
 
-// Phaser webpack config
-var phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
-var phaser = path.join(phaserModule, 'build/custom/phaser-split.js')
-var pixi = path.join(phaserModule, 'build/custom/pixi.js')
-var p2 = path.join(phaserModule, 'build/custom/p2.js')
+const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 
-var definePlugin =
+const PATHS = {
+  src: path.join(__dirname, 'src'),
+  dist: path.join(__dirname, 'dist'),
+  phaser: path.join(phaserModule, 'build/custom/phaser-split.js'),
+  pixi: path.join(phaserModule, 'build/custom/pixi.js'),
+  p2: path.join(phaserModule, 'build/custom/p2.js')
+}
 
-module.exports = {
+const commonConfig = {
   entry: {
     app: [
       'babel-polyfill',
-      path.resolve(__dirname, 'src/main.js')
+      path.resolve(PATHS.src, 'main.js')
     ],
     vendor: ['pixi', 'p2', 'phaser', 'webfontloader']
   },
-  devServer: {
-    historyApiFallback: true,
-    stats: 'errors-only',
-    host: process.env.HOST, // Defaults to `localhost`
-    port: process.env.PORT, // Defaults to 8080
-  },
-  devtool: 'cheap-source-map',
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'/* chunkName= */,
       filename: 'vendor.bundle.js'/* filename= */
     }),
-    new webpack.DefinePlugin({
-      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true'))
-    }),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: path.resolve(PATHS.src, 'index.html'),
     }),
   ],
   module: {
     rules: [
-      { test: /\.js$/, use: ['babel-loader'], include: path.join(__dirname, 'src') },
+      { test: /\.js$/, use: ['babel-loader'], include: PATHS.src },
       { test: /pixi\.js/, use: ['expose-loader?PIXI'] },
       { test: /phaser-split\.js$/, use: ['expose-loader?Phaser'] },
       { test: /p2\.js/, use: ['expose-loader?p2'] },
@@ -56,9 +49,52 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'phaser': phaser,
-      'pixi': pixi,
-      'p2': p2
+      'phaser': PATHS.phaser,
+      'pixi': PATHS.pixi,
+      'p2': PATHS.p2
     }
   }
+}
+
+const devConfig = {
+  devServer: {
+    historyApiFallback: true,
+    stats: 'errors-only',
+    host: process.env.HOST, // Defaults to `localhost`
+    port: process.env.PORT, // Defaults to 8080
+  },
+  devtool: 'cheap-source-map',
+  plugins: [
+    new webpack.DefinePlugin({
+      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true'))
+    }),
+  ],
+}
+
+const prodConfig = {
+  output: {
+    path: PATHS.dist,
+    filename: 'bundle.js'
+  },
+  plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.optimize.UglifyJsPlugin({
+      drop_console: true,
+      minimize: true,
+      output: {
+        comments: false
+      }
+    }),
+    new webpack.DefinePlugin({
+      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'false'))
+    }),
+  ],
+}
+
+module.exports = env => {
+  if (env === 'production') {
+    return merge(commonConfig, prodConfig);
+  }
+
+  return merge(commonConfig, devConfig);
 }

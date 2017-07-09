@@ -5,8 +5,8 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server",
-    "deploy": "webpack --config webpack.production.config.js",
+    "dev": "webpack-dev-server --env development",
+    "deploy": "webpack --env production",
     "lint": "eslint ./src/**/**.js"
   },
   "license": "MIT",
@@ -27,7 +27,8 @@
     "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.29.0",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^2.5.1",
+    "webpack-merge": "^4.1.0"
   },
   "dependencies": {
     "phaser-ce": "^2.8.0",
