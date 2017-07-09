@@ -1,12 +1,17 @@
 const path = require('path')
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const autoprefixer = require('autoprefixer')
 const merge = require('webpack-merge')
 
-const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
+// Plugins
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
+// PostCSS plugins
+const autoprefixer = require('autoprefixer')
+
+// Paths
+const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 const PATHS = {
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'dist'),
@@ -114,6 +119,7 @@ const prodConfig = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin([PATHS.dist]),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.UglifyJsPlugin({
       drop_console: true,
