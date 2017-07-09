@@ -23,7 +23,8 @@
     "phaser": true
   },
   "settings": {
-    "import/core-modules": [ "phaser", "pixi", "p2" ]
+    "import/core-modules": [ "phaser", "pixi", "p2" ],
+    "import/resolver": "webpack"
   },
   "plugins": [ "import" ]
 }
