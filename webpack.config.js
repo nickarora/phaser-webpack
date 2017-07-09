@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const autoprefixer = require('autoprefixer')
 const merge = require('webpack-merge')
 
 const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
@@ -18,6 +19,15 @@ const PATHS = {
 const extractTextPlugin = new ExtractTextPlugin({
   filename: './styles/[hash].css',
 })
+
+const autoPrefixLoader = {
+  loader: 'postcss-loader',
+  options: {
+    plugins: () => ([
+      autoprefixer(),
+    ]),
+  }
+}
 
 const commonConfig = {
   entry: {
@@ -75,7 +85,7 @@ const devConfig = {
       {
         test: /\.scss$/,
         include: PATHS.styles,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', autoPrefixLoader, 'sass-loader'],
       },
     ],
   },
@@ -97,7 +107,7 @@ const prodConfig = {
         test: /\.scss$/,
         include: PATHS.styles,
         use: extractTextPlugin.extract({
-          use: ['css-loader', 'sass-loader'],
+          use: ['css-loader', autoPrefixLoader, 'sass-loader'],
           fallback: 'style-loader',
         }),
       },
