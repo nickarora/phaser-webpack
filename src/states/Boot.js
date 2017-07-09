@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 import WebFont from 'webfontloader'
 
-import loaderBg from '../../assets/images/loader-bg.png'
-import loaderBar from '../../assets/images/loader-bar.png'
+import loaderBg from 'images/loader-bg.png'
+import loaderBar from 'images/loader-bar.png'
 
 export default class extends Phaser.State {
   init () {

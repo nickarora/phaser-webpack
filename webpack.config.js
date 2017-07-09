@@ -15,6 +15,7 @@ const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 const PATHS = {
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'dist'),
+  images: path.join(__dirname, 'assets/images'),
   styles: path.join(__dirname, 'assets/styles'),
   phaser: path.join(phaserModule, 'build/custom/phaser-split.js'),
   pixi: path.join(phaserModule, 'build/custom/pixi.js'),
@@ -69,10 +70,13 @@ const commonConfig = {
     ]
   },
   resolve: {
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
     alias: {
       'phaser': PATHS.phaser,
       'pixi': PATHS.pixi,
-      'p2': PATHS.p2
+      'p2': PATHS.p2,
+      'styles': PATHS.styles,
+      'images': PATHS.images,
     }
   }
 }

@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
-import { centerGameObjects } from '../utils'
+import { centerGameObjects } from 'utils'
 
-import mushroom from '../../assets/images/mushroom.png'
+import mushroom from 'images/mushroom.png'
 
 export default class extends Phaser.State {
   init () {}
