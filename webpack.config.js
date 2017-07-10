@@ -49,7 +49,8 @@ const commonConfig = {
       filename: 'vendor.bundle.js'/* filename= */
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(PATHS.src, 'index.html'),
+      title: 'Phaser-webpack',
+      template: path.resolve(PATHS.src, 'index.ejs'),
     }),
   ],
   module: {
