@@ -17,6 +17,7 @@ const PATHS = {
   dist: path.join(__dirname, 'dist'),
   images: path.join(__dirname, 'assets/images'),
   styles: path.join(__dirname, 'assets/styles'),
+  sounds: path.join(__dirname, 'assets/sounds'),
   phaser: path.join(phaserModule, 'build/custom/phaser-split.js'),
   pixi: path.join(phaserModule, 'build/custom/pixi.js'),
   p2: path.join(phaserModule, 'build/custom/p2.js')
@@ -68,6 +69,14 @@ const commonConfig = {
           },
         }
       },
+      { test: /\.(mp3|m4a|ogg|wav)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: './sounds/[hash].[ext]',
+          },
+        }
+      },
     ]
   },
   resolve: {
@@ -78,6 +87,7 @@ const commonConfig = {
       'p2': PATHS.p2,
       'styles': PATHS.styles,
       'images': PATHS.images,
+      'sounds': PATHS.sounds,
     }
   }
 }
