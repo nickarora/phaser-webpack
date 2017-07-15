@@ -20,7 +20,8 @@
     "import/no-unresolved": ["error"]
   },
   "globals": {
-    "phaser": true
+    "phaser": true,
+    "__DEV__": true
   },
   "settings": {
     "import/core-modules": [ "phaser", "pixi", "p2" ],
